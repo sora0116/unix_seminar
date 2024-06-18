@@ -1,0 +1,30 @@
+#set heading(numbering: "1.1")
+#set text(size: 12pt, font: "Harano Aji Mincho")
+
+#outline(title: "目次")
+
+= デバッガ
+プログラムのバグ(bug)を取り除く(de-)ことをデバッグといいます。デバッグを行う手法はいくつかあり、例えばプログラム中に標準出力を行う命令を追加してデバッグを行うprintデバッガと呼ばれる方法があります。デバッガはデバッグを支援するツールで、プログラムの任意箇所での停止や、変数の値の表示や変更、スタックトレースやメモリ内容の監視など高度な機能によりデバッグを支援します。
+
+C言語で書かれたプログラムに対応するデバッガはいくつか存在しており、有名なものにGDBとLLDBが存在します。このドキュメントではこの二つのデバッガについて基本的な使用方法の解説を行います。
+
+= GDB
+GDBはGnu Projectのデバッガです。
+
+== 起動と終了
+GDBを起動するには以下のいづれかのコマンドを使用します。
+`
+	gdb [options] [executable-file [core-file or process-id]]
+	gfb [options] --args executable-file [inferior-arguments ...]
+`
+`--args` を指定する場合、実行可能ファイルの後の引数(inferior-arguments) が実行時に渡されます。例えば `gdb --args gcc -O2 -c foo.c` は `gcc -O2 -c foo.c` の実行にデバッガをアタッチします。
+
+optionsに指定できるオプションは以下の通りです:
+=== ファイルの選択
+/ `-symbols FILE`, `-s FILE`: 
+/ `--core=COREFILE`: COREFILEを調査する
+/ `--exec=EXECFILE`: EXECFILEを実行する
+/ `--pid=PID`: PIDを指定してアタッチする
+/ `--directory=DIR`: DIRの中のソースコードを検索する
+
+===
