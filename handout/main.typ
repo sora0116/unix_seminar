@@ -1,5 +1,5 @@
 #set heading(numbering: "1.1")
-#set text(size: 12pt, font: "Harano Aji Mincho")
+#set text(size: 12pt, font: ("New Computer Modern", "Harano Aji Mincho"))
 
 #outline(title: "目次")
 
@@ -11,20 +11,42 @@ C言語で書かれたプログラムに対応するデバッガはいくつか�
 = GDB
 GDBはGnu Projectのデバッガです。
 
-== 起動と終了
-GDBを起動するには以下のいづれかのコマンドを使用します。
+== GDBの起動
+GDBを起動するには以下のいづれかのコマンドを使用します。起動後はコマンドを受け付けます。
 `
 	gdb [options] [executable-file [core-file or process-id]]
-	gfb [options] --args executable-file [inferior-arguments ...]
+	gfb [options] --args <executable-file> [inferior-arguments ...]
 `
 `--args` を指定する場合、実行可能ファイルの後の引数(inferior-arguments) が実行時に渡されます。例えば `gdb --args gcc -O2 -c foo.c` は `gcc -O2 -c foo.c` の実行にデバッガをアタッチします。
 
-optionsに指定できるオプションは以下の通りです:
-=== ファイルの選択
-/ `-symbols FILE`, `-s FILE`: 
-/ `--core=COREFILE`: COREFILEを調査する
-/ `--exec=EXECFILE`: EXECFILEを実行する
-/ `--pid=PID`: PIDを指定してアタッチする
-/ `--directory=DIR`: DIRの中のソースコードを検索する
+optionsに指定できるオプションは `gdb -h` で確認できます。
 
-===
+== GDBの終了
+GDBを終了するには `quit [expression]`, `exit [expression]` または `q` で終了できます。`expression` に指定した値は終了コードとして帰ります。
+
+== シェルコマンド
+GDB起動中にシェルコマンドを使用することができます。
+`
+	shell <command-string>
+	!<command-string>
+`
+`pipe` 命令を使用してgdbの出力を他のプログラムに繋ぐことができます。
+`
+	pipe [command] | <shell_command>
+	| [command] | <shell_command>
+	pipe -d <delim> <command> <delim> <shell_command>
+	| -d <delim> <command> <delim> <shell_command>
+`
+`command` が `|` を含むときには -d で別の記号(列)を指定します。
+
+== ロギング出力
+GDBの出力をファイルに行うことができます。GDBにはロギングを制御するコマンドがいくつか用意されています。
+
+/ `set loggging enabled [on|off]`: ロギングのオンオフ切り替え
+/ `set logging file <file>`: 現在のログファイルの名前を変更。デフォルト値は `gdb.txt`
+/ `set logging overwrite [on|off]`: 上書きか書き足しか(onで上書き)。デフォルト値は `off`
+/ `set logging redirect [on|off]`: onにするとGDBの出力がログファイルにのみ行われる。デフォルト値は `off`
+/ `set logging debugredirect [on|off]`: onにするとGDBデバッグの出力がログファイルにのみ行われる。デフォルト値は `off`
+/ `show logging`: ロギングの設定を表示する
+
+= GDBコマンド
