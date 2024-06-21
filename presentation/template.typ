@@ -39,7 +39,7 @@
   author: none,
   upper-content: (title: none) => [
     #set align(center + bottom)
-    #text(size: 1.8em)[
+    #text(size: 1.5em)[
       #if (title != none) {title} else {context slide-title.get()}
     ]
     #v(.5em)
@@ -47,7 +47,7 @@
   lower-content: (author: none) => [
     #set align(right + top)
     #v(.5em)
-    #text(size: 1.3em)[
+    #text(size: 1.2em)[
       #if (author != none) {author} else {context slide-author.get()}
     ]#linebreak()
     #context slide-date.get().display("[year]年[month]月[day]日")#linebreak()
@@ -74,7 +74,7 @@
 ) = [
   #polylux.polylux-slide()[
     #grid(
-      rows: (10%, 1%, 1fr, 5%),
+      rows: (10%, 1%, 1fr, 2%),
       [
         #full_block(bg: colors.at(0))[
           #grid(
@@ -88,8 +88,9 @@
         ]
       ],
       [#full_block(bg: colors.at(2))[]],
-      [#full_block(bg: colors.at(0))[#body]],
+      [#block(width: 100%, height: 100%, inset: 1em, fill: colors.at(0))[#body]],
       [
+        #set text(size: 0.7em)
         #grid(
           columns: (25%, 50%, 25%),
           [
