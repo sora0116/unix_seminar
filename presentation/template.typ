@@ -74,7 +74,7 @@
 ) = [
   #polylux.polylux-slide()[
     #grid(
-      rows: (10%, 1%, 1fr, 2%),
+      rows: (10%, 1%, 1fr, 3%),
       [
         #full_block(bg: colors.at(0))[
           #grid(
@@ -90,7 +90,7 @@
       [#full_block(bg: colors.at(2))[]],
       [#block(width: 100%, height: 100%, inset: 1em, fill: colors.at(0))[#body]],
       [
-        #set text(size: 0.7em)
+        #set text(size: 0.5em)
         #grid(
           columns: (25%, 50%, 25%),
           [
