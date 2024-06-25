@@ -184,9 +184,39 @@ bnumのブレークポイントに条件を付与します。`-force`オプシ�
 
 
 === 動的printf
-
+動的printf`dprintf`ブレークポイントとprintfを組み合わせたようなコマンドです。
+`
+	dprintf <locspec>, <template>, <expression> [, <expression>...]
+`
+locspecで指定した場所にプログラムが到達すると`template`に従って式の`expression`を出力します。
+`
+	set dprintf-style <style>
+`
+dprintfの以下のスタイルを指定します。
+- `gdb`
+GDBのprintfのハンドル。`%V`の指定子が使える。
+- `call`
+ユーザプログラムの関数を使用します。通常は`printf`。`%V`は使えません。
+- `agent`
+リモートデバッグエージェントに出力させます。`%V`は使えません。
+`
+	set dprintf-function <function>
+`
+`call`のときに使用する関数を設定します。
+`
+	set dprintf-channel <channel>
+`
+`channel`に空でない値を設定すると、`fprintf-function`の第一引数にそれを与えて評価します。
+`
+	set disconnected-dprintf 'on|off'
+`
+`agent`のときに、ターゲットが切断されたときにdprintfの実行を続けるかどうかの設定です。
 
 === ブレークポイントをファイルに保存する方法
+`
+	save breakpoints [<filename>]
+`
+
 === 静的プローブポイントの一覧表示
 === ブレークポイントを挿入できません。
 === ブレークポイントアドレスが調整されました...
