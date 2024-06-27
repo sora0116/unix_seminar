@@ -12,25 +12,5 @@
 #include "section6.typ"
 #include "section7.typ"
 #include "section8.typ"
-= ソースファイルの検証
-
-== リスト
-`
-	list <linenum>
-`
-現在のソースコード行を中心に`linenum`行のソースコードを表示します。
-`
-	list <function>
-`
-関数の開始点を中心にコードを表示します。
-`
-	list [+]
-`
-最後に出力された行の続きを表示する。
-
-== 位置指定
-== 編集
-== 検索
-== ソースパス
-== 機械語
-== ソース読み込み無効化
+#include "section9.typ"
+= データの検証
