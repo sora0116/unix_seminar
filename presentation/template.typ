@@ -27,6 +27,7 @@
     margin: 0pt,
   )
   #set text(size: 25pt, font: "Harano Aji Gothic")
+  #show heading: it => {}
   #slide-title.update(title)
   #slide-author.update(author)
   #slide-date.update(date)
