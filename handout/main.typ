@@ -14,3 +14,7 @@
 #include "section8.typ"
 #include "section9.typ"
 = データの検証
+`
+  print [[<options>] --] <expr>
+  print [[<options>] --] /<f> <expr>
+`

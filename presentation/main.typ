@@ -33,11 +33,7 @@
 
 = お品書き
 #slide(title: "お品書き")[
-  - デバッガ
-    - GDB
-    - LLDB
-  - プロファイラ
-    - perf
+  #outline(depth: 2, indent: 2em)
 ]
 
 = デバッガ
@@ -197,6 +193,8 @@
   - `signal [<sig>|all]` : シグナル配信
 ]
 
+=== 検査
+==== データの検査
 #slide(title: "GDBの使い方")[
 
 ]
