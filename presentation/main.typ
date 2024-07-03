@@ -198,14 +198,7 @@
 #slide(title: "GDBの使い方")[
 
 ]
-// - aliases -- Aliases of other commands
-// - breakpoints -- Making program stop at certain points
-// - data -- Examining data
-// - files -- Specifying and examining files
-// - internals -- Maintenance commands
-// - obscure -- Obscure features
-// - running -- Running the program
-// - stack -- Examining the stack
-// - status -- Status inquiries
-// - support -- Support facilities
-// - tracepoints -- Tracing of program execution without stopping the program
+
+#set text(size: 12pt)
+#set page(paper: "a4")
+// #outline(inset: 10pt)
