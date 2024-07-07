@@ -316,7 +316,6 @@
   ```
   で指定部分を表示
 ]
-
 == データの調査
 === プリント
 #slide(title: "プリント")[
@@ -327,15 +326,156 @@
 
   引数:
   - `options` : オプション
-  - `fmt` : 
-  - `expt` : 表示する値
+  - `fmt` : フォーマット指定。以下が指定可能:
+    - `x, d, u, o, t, z`: 16,10,符号なし10,8,2,0埋め16進数で表示
+    - `a`: アドレスとして表示
+    - `c`: 整数にキャストして文字として表示
+    - `f`: 浮動小数として表示
+    - `s`: 文字列として表示
+    - `r`: 生フォーマットで表示
+  - `expr` : 表示する値
+]
+#slide(title: "メモリ")[
+  ```shell
+    (gdb) x[/<num><fmt><unit>] <addr>
+  ```
+  でメモリの内容を表示
+
+  引数:
+  - `num`: 表示するメモリ量(単位: `unit`)
+  - `fmt`: フォーマット指定。以下が指定可能:
+    - `print`で指定可能なフォーマット
+    - `i`: 機械語命令として表示
+    - `m`: メモリタグとして表示
+  - `unit`: `num`で使用する単位
+    - `b, h, w, g`: 1, 2, 4, 8バイト
+  - `addr`: 表示するメモリ領域の先頭アドレス
 ]
 === ディスプレイ
+#slide(title: "ディスプレイ")[
+  ```shell
+    (gdb) display[/<fmt>] <expr>
+  ```
+  でプログラムが停止する度に自動で表示
+
+  フォーマットに応じて`print`か`x`が呼ばれる
+
+  引数:
+  - `fmt`: フォーマットを指定。`print`,`x`で指定可能なものが指定可能
+  - `expr`: 表示する式またはアドレス
+  ```shell
+    (gdb) info display
+  ```
+  で設定されているディスプレイのリストを表示
+  ```shell
+    (gdb) undisplay <dnum>...
+  ```
+  でディスプレイを解除
+]
 === 人工配列
+#slide(title: "人工配列")[
+  ```shell
+    (gdb) p <first>@<len>
+  ```
+  で`first`を最初の要素とする長さ`len`の配列として表示
+
+  例:
+  ```c
+    int *arr = (int*)malloc(2 * sizeof(int));
+  ```
+  と宣言したものを
+  ```shell
+    (gdb) p *arr@2
+  ```
+  で表示
+  ```shell
+    (gdb) p (int[2])*arr
+  ```
+  でも可
+]
 === レジスタ
+#slide(title: "レジスタ")[
+  ```shell
+    (gdb) info registers
+  ```
+  でベクタ、フロート以外のレジスタを全て表示
+  ```shell
+    (gdb) info all-registers
+  ```
+  ですべてのレジスタを表示
+]
 
 == (トレースポイント)
 == (TUI)
+
+= プロファイラ
+== プロファイラとは
+#slide(title: "プロファイラとは")[
+  - プロファイラ
+    - プログラムの動作を記録し、動作の統計情報を調べるツール
+
+  - 使いどころ
+    - 作成したプログラムの性能評価
+    - ホットスポットの調査
+    - ハードウェア性能情報の監視
+== Perf
+
+  - Perf
+    - Linux向けのプロファイラ
+]
+== コマンド
+#slide(title: "コマンド")[
+  ```shell
+    # perf <command>
+  ```
+  の形式でコマンドを実行
+  ```shell
+    # perf
+  ```
+  で`command`の一覧を閲覧
+  ```shell
+    # perf help <command>
+  ```
+  で各コマンドの使い方を表示
+  ```shell
+    # perf list
+  ```
+  でイベント(観測できる統計情報)の一覧を表示
+]
+== stat
+#slide(title: "stat")[
+  ```shell
+    # perf stat [<options>] [<command>]
+  ```
+  で`command`を実行して統計情報を表示
+
+  よく使う`options`:
+  - `-B, --big-num` : 大きな数字を見やすく表示
+  - `-e, --event <e>` : 集計するイベントを指定
+    - カンマで区切って複数指定可
+]
+== record
+#slide(title: "record")[
+  ```shell
+    # perf record [<options>] [<command>]
+  ```
+  で`command`を実行してプロファイル情報を収集
+
+  よく使う`options`:
+  - `-e <events>` : 収集するイベントを指定
+  - `-o <filename>` : 出力ファイル名を指定
+]
+== report
+#slide(title: "report")[
+  ```shell
+    # perf report [<options>]
+  ```
+  で`record`で生成したプロファイル結果を調査
+
+  よく使う`options`:
+  - `-i` : 調査するファイルを指定
+]
+== (top)
 
 #set text(size: 12pt)
 #set page(paper: "a4")
