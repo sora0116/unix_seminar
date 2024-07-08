@@ -464,6 +464,7 @@
   よく使う`options`:
   - `-e <events>` : 収集するイベントを指定
   - `-o <filename>` : 出力ファイル名を指定
+  - `-g` : コールグラフを有効化
 ]
 == report
 #slide(title: "report")[
@@ -474,6 +475,7 @@
 
   よく使う`options`:
   - `-i` : 調査するファイルを指定
+  - `--stdio` : TUIモードを使用しない
 ]
 == (top)
 
