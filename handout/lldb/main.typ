@@ -1,3 +1,5 @@
+#import "@preview/big-todo:0.2.0": *
+
 #set text(font: "Harano Aji Mincho")
 #set heading(numbering: "1.1")
 #set page(numbering: "1")
@@ -11,6 +13,49 @@
     it
   }
 }
+
+#let ops(cons) = [
+  `options`に指定できるオプションは以下の通りです:
+  #let t = cons.flatten()
+  #table(
+    columns: (1fr, 1fr),
+    align: (x,y) => if y==0 {center} else {left},
+    [option name], [description],
+    ..t
+  )
+]
+#let ops3(cons) = [
+  `options`に指定できるオプションは以下の通りです:
+  #let t = cons.flatten()
+  #table(
+    columns: (1fr, 1fr, 1fr),
+    align: (x,y) => if y==0 {center} else {left},
+    [option name], [description], [],
+    ..t
+  )
+]
+#let op_line = (`-l, --line <linenum>`, [行数を指定])
+#let op_file = (`-f, --file <filename>`, [ファイル名を指定])
+#let op_dummy-breakpoints = (`-D, --dummy-breakpoints`, [ダミーブレークポイントを指定])
+#let op_one-liner = (`-o, --one-liner <cmd>`, [停止時に実行するコマンドを設定])
+#let op_python-function = ([`-F, --python-function <func>`], [停止時に実行するPythonの関数を設定])
+#let op_script-type = (`-s, --script-type <none>`, [コマンドの言語を指定。`command, python, lua, default-script`が指定可能])
+#let op_stop-on-error = (`-e, --stop-on-error <bool>`, [コマンド実行時エラーで停止するかの設定])
+#let op_structured-data-key = (`-k, --structured-data-key <none>`, [The key for a key/value pair passed to the implementation of a breakpoint command.  Pairs can be specified more than once.])
+#let op_structured-data-value = (`-v, --structured-data-value <none>`, [The value for the previous key in the pair passed to the implementation of a breakpoint command.  Pairs can be specified more than once.])
+#let op_ignore-count = (`-i, --ignore-count <count>`, [ignore-counterを設定します])
+#let op_disabled = (`-d, --disabled`,[現在無効な(リストで指定した以外の)すべてを指定])
+#let op_force = (`-f, --force`,[警告なしですべて指定])
+#let op_brief = (`-b, --brief`,[情報を短く表示])
+#let op_full = (`-f, --full`,[すべての情報を表示])
+#let op_internal = (`-i, --internal`,[デバッガの内部ブレークポイントも表示])
+#let op_verbose = (`-v, --verbose`,[わかることすべてを表示])
+
+#let gram(cmd) = [
+
+  文法:
+  #raw("  (lldb) " + cmd, block: true, lang: "shell")
+]
 
 = LLDB
   == コマンド構文
@@ -45,113 +90,62 @@
     ```shell
       (lldb) file <program>
     ```
-  == ブレークポイント
+  == ブレークポイントを管理する
     `help breakpoint [<subcommand>]`でブレークポイント関連のコマンドのヘルプを閲覧できます。
     === clear
       指定したファイル、行数にあるブレークポイントを削除または無効化します。
-
-      文法:
-      ```shell
-        (lldb) breakpoint clear -l <linenum> [-f <filename>]
-      ```
-      オプションの役割は以下の通りです。
-      #table(columns: (1fr, 1fr),
-        align: (x, y) => {if y == 0 {center} else {left}},
-        [options name], [description],
-        [`-l, --line <linenum>`], [行数を指定],
-        [`-f, --file <filename>`], [ファイル名を指定],
-      )
+      #gram("breakpoint clear <options>")
+      #ops((op_line, op_file))
     === command
       停止時のコマンドを設定します。
-
-      文法:
-      ```shell
-        (lldb) breakpoint command <subcommand> [<subcommand-options>] <breakpt-id>
-      ```
+      #gram("breakpoint command <subcommand> [<subcommand-options>] <breakpt-id>")
       `subcommand`には`add, delete, list`が指定できます。
       ==== add
         コマンドを追加します。
-
-        文法:
-        ```shell
-          (lldb) breakpoint command add <cmd-options> [<breakpoint-id>]
-        ```
-        `cmd-options`に指定できるオプションは以下の通りです:
-        #table(columns: (1fr, 1fr),
-          align: (x, y) => {if y == 0 {center} else {left}},
-          [option name], [description],
-          [`-D, --dummy-breakpoints`], [ダミーブレークポイントを設定],
-          [`-o, --one-liner <cmd>`], [停止時に実行するコマンドを設定],
-          [`-F, --python-function <func>`], [停止時に実行するPythonの関数を設定],
-          [`-s, --script-type <none>`], [コマンドの言語を指定。`command, python, lua, default-script`が指定可能],
-          [`-e, --stop-on-error <bool>`], [コマンド実行時エラーで停止するかの設定],
-          [`-k, --structured-data-key <none>`], [The key for a key/value pair passed to the implementation of a breakpoint command.  Pairs can be specified more than once.],
-          [`-v, --structured-data-value <none>`], [The value for the previous key in the pair passed to the implementation of a breakpoint command.  Pairs can be specified more than once.],
-        )
+        #gram("breakpoint command add <options> [<breakpoint-id>]")
+        #ops((
+          op_dummy-breakpoints,
+          op_one-liner,
+          op_python-function,
+          op_script-type,
+          op_stop-on-error,
+          op_structured-data-key,
+          op_structured-data-value,
+        ))
       ==== delete
         コマンドを削除します。
-
-        文法:
-        ```shell
-          (lldb) breakpoint delete <options> [<breakpoint-id-list>]
-        ```
-        `options`に指定できるオプションは以下の通りです:
-        #table(columns: (1fr, 1fr), 
-          align: (x, y) => {if y == 0 {center} else {left}},
-          [option name], [description],
-          [`-D, --dummy-breakpoints`],[ダミーブレークポイントを削除],
-          [`-d, --disabled`],[現在無効な(リストで指定した以外の)すべてのブレークポイントを削除],
-          [`-f, --force`],[全てのブレークポイントを強制的に削除],
-        )
+        #gram("breakpoint delete <options> [<breakpoint-id-list>]")
+        #ops((
+          op_dummy-breakpoints,
+          op_disabled,
+          op_force
+        ))
       ==== list
         設定されているブレークポイントを表示します。
-
-        文法:
-        ```shell
-          (lldb) breakpoint list <options> [<breakpoint-id>]
-        ```
-        `option`に指定できるオプションは以下の通りです:
-        #table(columns: (1fr, 1fr, .3fr), 
-          align: (x, y) => {if y == 0 {center} else {left}},
-          [option name], [description],[],
-          [`-D, --dummy-breakpoints`],[ダミーブレークポイントを表示],[],
-          
-          [`-b, --brief`],[ブレークポイントの情報を短く表示],
+        #gram("breakpoint list <options> [<breakpoint-id>]")
+        #ops3((
+          op_dummy-breakpoints, [],
+          op_brief,
           table.cell(rowspan: 4)[`bi`, `fi`, `iv`の組み合わせのみ可],
-          [`-f, --full`],[ブレークポイントのすべての情報を表示],
-          [`-i, --internal`],[デバッガの内部ブレークポイントも表示],
-          [`-v, --verbose`],[ブレークポイントについてわかることすべてを表示],
-        )
+          op_full,
+          op_internal,
+          op_verbose,
+        ))
       === delete
         ブレークポイントを削除します。
-
-        文法:
-        ```shell
-          (lldb) breakpoint delete <options> [<breakpoint-id-list>]
-        ```
-        `options`に指定できるオプションは以下の通りです:
-        #table(columns: (1fr, 1fr, .3fr), 
-          align: (x, y) => {if y == 0 {center} else {left}},
-          [option name], [description],[],
-          [`-D, --dummy-breakpoints`],[ダミーブレークポイントを削除],
+        #gram("breakpoint delete <options> [<breakpoint-id-list>]")
+        #ops3((
+          op_dummy-breakpoints,
           table.cell(rowspan: 3)[短縮して指定可能`-Ddf`],
-          [`-d, --disabled`],[現在無効なブレークポイントを削除],
-          [`-f, --force`],[全てのブレークポイントを削除],
-        )
+          op_disabled,
+          op_force,
+        ))
     === disable
       ブレークポイントを無効化します。
-
-      文法:
-      ```shell
-        (lldb) breakpoint disable [<breakpoint-id-list>]
-      ```
+      #gram("breakpoint disable [<breakpoint-id-list>]")
     === enable
       ブレークポイントを有効化します。
-
-      文法:
-      ```shell
-        (lldb) breakpoint enable [<breakpoint-id-list>]
-      ```
+      #gram("breakpoint enable [<breakpoint-id-list>]")
     === list
       設定されているブレークポイントを表示します。
 
@@ -350,7 +344,7 @@
         [`-a, --append`], [ファイルが既存ならば追加],
         [`-f, --file <filename>`], [保存先のファイル名],
       )
-  == ウォッチポイント
+  == ウォッチポイントを管理する
     `help watchpoint [<subcommand>]`でウォッチポイント関連のコマンドのヘルプを閲覧できます。
     === command
       ウォッチポイントにヒットしたときに実行するコマンドを管理します。
@@ -495,10 +489,50 @@
           [`-w, --watch <type>`], [ウォッチのタイプを指定。`read, write, read_write`が指定可能],
           [`-s, --size <size>`], [監視するバイト数],
         )
-
-
-#table(columns: (1fr, 1fr),
-  align: (x, y) => {if y == 0 {center} else {left}},
-  [option name], [description],
-  [`-, --`], [],
-)
+  == プロセスを制御する
+    LLDBでプログラムを開始するには`process`コマンドを使用します。
+    #gram("process <subcommand> [<options>]")
+    `subcommand`には`attach, connect, continue, detach, handle, interrupt, kill, launch, load, plugin, save-core, signal, status, trace, unload`が指定できます。
+    === attach
+      プロセスにLLDBをアタッチします。
+      #gram("process attach <options>")
+      #let op_continue = (`-c, --continue`, [アタッチ後に停止せずに継続])
+      #let op_include-existing = (`-i, --include-existing`, [`-w`指定時に、すでに存在するプロセスを含む])
+      #let op_waitfor = (`-w, --waitfor`, [`-n`で指定した名前のプロセスが起動するまで待つ])
+      #let op_pid = (`-p, --pid`, [プロセスIDを指定])
+      #let op_name = (`-n, --name`, [名前を指定してアタッチ])
+      #let op_plugin = (`-P, --plugin <plugin>`, [プロセスプラグインを指定])
+      #ops((
+        op_continue,
+        op_include-existing,
+        op_waitfor,
+        op_pid,
+        op_name,
+        op_plugin,
+      ))
+    === connect
+      リモートデバッグサービスに接続します。#todo("確認")
+      #gram("process connect <remote-url>")
+    === continue
+      現在のプロセスのすべてのスレッドを継続実行します。
+      #gram("process continue <options>")
+      #ops(op_ignore-count)
+    === detach
+      プロセスからデタッチします。
+      #gram("process detach <options>")
+      #ops((
+        (`-s, --keep-stopped <bool>`, [])
+      ))
+    === handle
+    === interrupt
+    === kill
+    === launch
+    === load
+    === plugin
+    === save-core
+    === signal
+    === status
+    === trace
+    === unload
+  == プログラムを制御する
+// EOF
