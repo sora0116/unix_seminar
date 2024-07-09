@@ -524,15 +524,117 @@
         (`-s, --keep-stopped <bool>`, [])
       ))
     === handle
+      シグナルのLLDBでの扱いを設定します。
+      #gram("process handle <options> [<signal>...]")
+      #ops((
+        (`-n, --notify <bool>`, [デバッガがシグナル受信をユーザに知らせるか]),
+        (`-p, --pass <bool>`, [シグナルをプロセスに渡すか]),
+        (`-s, --stop <bool>`, [シグナル受信時にプロセスを停止するか])
+      ))
+      `signal`を指定しない場合、すべてのシグナルに対して設定されます。
     === interrupt
+      現在のターゲットプロセスに割り込みを行います。
+      #gram("process interrupt")
     === kill
+      現在のターゲットプロセスをkillします。
+      #gram("process kill")
     === launch
+      プログラムを起動します。
+      #gram("process launch <options> [<args>]")
+      #ops((
+        (`-s, --stop-at-entry`, [エントリポイントで停止]),
+        (`-t, --tty <none>`, [プロセスを開始するターミナル]),
+        (`-n, --no-stdio`, [標準出力を行わない]),
+        (`-a, --arch <arch>`, [曖昧なときにアーキテクチャを指定]),
+        (`-A, --disable-aslr <bool>`, [アドレス空間のランダム化を行うか]),
+        (`-E, --environment <none>`, [環境変数を`NAME=VALUE`の形で設定]),
+        (`-P, --plugin <plugin>`, [プロセスプラグイン名]),
+        (`-c, --shell <filename>`, [プロセスを走らせるシェル]),
+        (`-e, --stderr <filename>`, [標準エラー出力]),
+        (`-X, --shell-expand-args <bool>`, [プロセス起動時にシェルが引数を拡張するか]),
+        (`-i, --stdin <filename>`, [標準入力]),
+        (`-o, --stdout <filename>`, [標準出力]),
+        (`-w, --working-dir <dir>`, [プロセスのワーキングディレクトリ]),
+        (`-C, --script-class <python-class>`, [scripted classの管理クラス名]),
+        (`-k, --structured-data-key <none>`, [The key for a key/value pair passed to the implementation of a scripted process.  Pairs can be specified more than once.]),
+        (`-v, --structured-data-value <none>`, [The value for the previous key in the pair passed to the implementation of a scripted process.  Pairs can be specified more than once.]),
+      ))
     === load
+      現在のプロセスに共有ライブラリをロードします。
+      #gram("process load <options> <filename>...")
+      #ops(((`-i <path>, --install=<path>`, [ターゲットに共有ライブラリをインストール])))
     === plugin
+      現在のターゲットプロセスプラグインにコマンドを渡します。
+      #gram("process plugin <args>")
     === save-core
+      現在のプロセス状態をコアファイルに保存します。
+      #gram("process save-core <options> <filename>")
+      #ops((
+        (`-p <plugin>, --plugin-name=<plugin>`, [コアファイルを生成するためのプラグイン]),
+        (`-s, --style <corefile-style>`, [コアファイルの保存形式。`full, modified-memory, stack`が指定可能])
+      ))
     === signal
+      UNIXのシグナルをプロセスに送信します。
+      #gram("process signal <signal>")
     === status
+      プロセスのステータスと停止位置を表示します。
+      #gram("process status <options>")
+      #ops((`-v, --verbose`, [拡張情報を含むすべてのプロセスステータスを表示]))
     === trace
+      プロセスをトレースします。
+      #gram("process trace <subcommand> [<options>]")
+      `subcommand`には`save, start, stop`が指定できます。
+      === save
+        現在のプロセスのトレースを保存します。
+        #gram("process trace save [<options>]")
+        #ops((`-d, --directory <dir>`, [保存場所]))
+      === start
+        トレースを開始します。
+        #gram("process trace start <options>")
+      === stop
+        トレースを終了します。
+        #gram("process trace stop")
     === unload
+      現在のプロセスから共有ライブラリをアンロードします。
+      #gram("process unload <index>")
   == プログラムを制御する
+    ブレークポイントなどで停止したプログラムを再開したりステップ実行するには`thread`コマンドを使用します。
+    #gram("thread <subcommand> [<options>]")
+    `subcommand`には`backtrace, continue, exception, info, jump, list, plan, return, select, siginfo, step-in, step-inst, step-inst-over, step-out, step-over, step-scripted, trace, until`が指定できます。
+    === backtrace
+      スレッドのコールスタックを表示します。
+      #gram("thread backtrace <options>")
+      #ops((
+        (`-c, --count <count>`, [表示するフレームの数。-1は全て]),
+        (`-e, --extended <bool>`, [拡張バックトレース]),
+        (`-s, --start <frame-index>`, [バックトレースの開始フレーム]),
+      ))
+    === continue
+      プロセスを継続実行します。スレッドを指定しない場合全てのスレッドが対象になります。
+      #gram("thread continue <thread-index>...")
+    === exception
+      現在の例外オブジェクトを表示します。
+      #gram("thread exception")
+    === info
+      一つ以上のスレッドの概要情報を表示します。スレッドを指定しない場合、現在のスレッドが対象です。
+      #gram("thread info <options>")
+      #ops((
+        (`-j, --json`, [JSON形式で表示]),
+        (`-s, --stop-info`, [JSON形式で停止情報を表示])
+      ))
+    === jump
+    === list
+    === plan
+    === return
+    === select
+    === siginfo
+    === step-in
+    === step-inst
+    === step-inst-over
+    === step-out
+    === step-over
+    === step-scripted
+    === trace
+    === until
+
 // EOF
