@@ -490,7 +490,7 @@
           [`-s, --size <size>`], [監視するバイト数],
         )
   == プロセスを制御する
-    LLDBでプログラムを開始するには`process`コマンドを使用します。
+    LLDBでプロセスを制御するには`process`コマンドを使用します。
     #gram("process <subcommand> [<options>]")
     `subcommand`には`attach, connect, continue, detach, handle, interrupt, kill, launch, load, plugin, save-core, signal, status, trace, unload`が指定できます。
     === attach
@@ -597,8 +597,8 @@
     === unload
       現在のプロセスから共有ライブラリをアンロードします。
       #gram("process unload <index>")
-  == プログラムを制御する
-    ブレークポイントなどで停止したプログラムを再開したりステップ実行するには`thread`コマンドを使用します。
+  == スレッドを制御する
+    スレッドを制御するには`thread`コマンドを使用します。
     #gram("thread <subcommand> [<options>]")
     `subcommand`には`backtrace, continue, exception, info, jump, list, plan, return, select, siginfo, step-in, step-inst, step-inst-over, step-out, step-over, step-scripted, trace, until`が指定できます。
     === backtrace
@@ -667,25 +667,129 @@
     === siginfo
       現在のsiginfoオブジェクトを表示します。
       #gram("thread siginfo")
-    === step-in
+    === step-in<step-in>
       ソースコード上のステップを行います。関数呼び出しの場合には関数の中に入ります。スレッドを指定しない限り現在のスレッドにのみ適用されます。
-      #gram("thread step-in [<options>]")
+      #gram("thread step-in [<options>] [<thread-id>]")
       #ops((
         (`-A, --step-out-avoids-no-debug <bool>`, [ステップアウト時にデバッグ情報のある関数に当たるまでステップアウトを続ける]),
-        (`-a, --step-in-avoids-no-debug <bool>`, []),
-        (`-c, --`, []),
-        (`-e, --`, []),
-        (`-m, --`, []),
-        (`-r, --`, []),
-        (`-t, --`, []),
+        (`-a, --step-in-avoids-no-debug <bool>`, [デバッグ情報のない関数にステップインせずにステップオーバーする]),
+        (`-c, --count <count>`, [ステップ回数]),
+        (`-e, --end-linenumber <linenum>`, [ステップを停止する行番号]),
+        (`-m, --run-mode <mode>`, [他スレッドの処理方法。`this-thread, all-threads, while-stepping`が指定可能]),
+        (`-r, --step-over-regexp <regex>`, [正規表現にマッチする関数をスキップ]),
+        (`-t, --step-in-target <func-name>`, [直接呼び出された関数のステップイン時に停止する関数名]),
       ))
     === step-inst
+      命令上のステップを行います。callは中に入ります。
+      #gram("thread step-inst [<options>] [<thread-id>]")
+      `options`に指定できるオプションは @step-in と同じです。
     === step-inst-over
+      命令上のステップを行います。callはステップオーバーします。
+      #gram("thread step-inst-over [<options>] [<thread-id>]")
+      `options`に指定できるオプションは @step-in と同じです。
     === step-out
+      現在のスタックフレームを抜けるまで実行し、停止します。
+      #gram("thread step-out [<options>] [<thread-id>]")
+      `options`に指定できるオプションは @step-in と同じです。
     === step-over
+      ソースコード上のステップを行います。関数呼び出しはステップオーバーします。
+      #gram("thread step-over [<options>] [<thread-id>]")
+      `options`に指定できるオプションは @step-in と同じです。
     === step-scripted
+      Step as instructed by the script class passed in the -C option.  You can also specify a dictionary of key (-k) and value (-v) pairs that will be used to populate an SBStructuredData Dictionary, which will be passed to the constructor of the class implementing the scripted step.  See the Python Reference for more details.
+      #gram("thread step-scripted [<options>] [<thread-id>]")
+      `options`には @step-in で指定できるものに加えて以下が指定可能です。
+      #ops((
+        (`-k, --structured-data-key`, [The key for a key/value pair passed to the implementation of a scripted step.  Pairs can be specified more than once.]),
+        (`-v, --structured-data-value`, [The value for the previous key in the pair passed to the implementation of a scripted step.  Pairs can be specified more than once.]),
+      ))
     === trace
+      トレース関連のコマンドです。
+      #gram("thread trace <subcommand> [<options>]")
+      `subcommand`には`dump, export, start, stop`が指定可能です。
+      ==== dump
+        トレース情報を表示します。
+        #gram("thread trace subcommand [<options>]")
+        `subcommand`には`info, instructions`が指定できます。
+        ===== info
+          トレースされた情報をダンプします。
+          #gram("thread trace info [<options>]")
+          #ops(((`-v, --verbose`, [冗長なダンプ])))
+        ===== instructions
+          トレースされた命令をダンプします。
+          #gram("thread trace instructions [<options>]")
+          #ops((
+            (`-c, --count <count>`, [表示する命令の数]),
+            (`-f, --forwards`, [一番古い地点から表示]),
+            (`-r, --raw`, [シンボル情報なし]),
+            (`-s, --skip <index>`, [スキップする命令数]),
+            (`-t, --tsc`, [可能なら命令ごとにタイムスタンプを表示]),
+          ))
+      ==== export
+        トレースをエクスポートします。
+        #gram("thread trace export <plugin> [<options>]")
+      ==== start
+        トレースを開始します。
+        #gram("thread trace start [<options>]")
+      ==== stop
+        トレースを終了します。
+        #gram("thread trace stop [<thread-index>...]")
     === until
-
+      指定した箇所まで実行します。
+      #gram("thread until <options> <linenum>")
+      #ops((
+        (`-a, --address <expr>`, [このアドレスに到達するか関数を抜けるまで実行]),
+        (`-f, --frane <index>`, [対象のフレーム。デフォルトは0]),
+        (`-m, --run-mode <mode>`, [実行モード。`this-thread, all-threads`]),
+        (`-t, --thread <index>`, [対象のスレッド]),
+      ))
+  == フレームを制御する
+    フレームを制御するには`frame`コマンドを使用します。
+    #gram("frame <subcommand> [<options>]")
+    `subcommand`には``が指定できます。
+    === diagnose
+      現在の停止位置がどのようなパスでレジスタやアドレスに到達したかを判断しようとします。
+      #gram("frame diagnose [<options>] [<frame-index>]")
+      #ops((
+        (`-a, --address <addr>`, [アドレス]),
+        (`-o, --offset <offset>`, [オフセット]),
+        (`-r, --register <name>`, [レジスタ]),
+      ))
+    === info
+      現在のフレームの情報を表示します。
+      #gram("frame info")
+    === select
+      スタックフレームからフレームを選択します。
+      #gram("frame select [<options>] [<frame-index>]")
+      #ops((`-r, --relative <offset>`, [現在のフレームからのオフセットで指定]))
+    === variable
+      現在のスタックフレームに存在する変数を表示します。
+      #gram("frame variable <options> [<varname>...]")
+      #ops((
+        (`-A, --show-all-children`, [上限を無視して子を表示]),
+        (`-D, --depth <count>`, [表示する最大深さ]),
+        (`-F, --flat`, [フラットフォーマットで表示]),
+        (`-G, --gdb-format`, [GDBフォーマットで表示]),
+        (`-L, --locationn`, [位置情報を表示]),
+        (`-O, --object-description`, [言語ごとの説明APIを使用して表示]),
+        (`-P, --ptr-depth <count>`, [値をダンプする際のポインタの深さ]),
+        (`-R, --raw-output`, [フォーマットを行わない]),
+        (`-S, --synthetic-type <bool>`, [synthetic providerに従うかを表示]),
+        (`-T, --show-types`, [型を表示]),
+        (`-V, --validate <bool>`, [型チェックの結果を表示]),
+        (`-Y [<count>], --no-summary-depth=[<count>]`, [概要情報を省略する深さ]),
+        (`-Z, --element-count <count>`, [型が配列あるかのように表示]),
+        (`-a, --no-args`, [関数の引数を省略]),
+        (`-c, --show-declaration`, [変数の宣言情報を表示]),
+        (`-d, --dynamic-type <none>`, [オブジェクトの完全な動的型を表示]),
+        (`-f, --format <fmt>`, [フォーマット]),
+        (`-g, --show-globals`, [グローバル変数を表示]),
+        (`-l, --no-locals`, [局所変数を省略]),
+        (`-r, --regex`, [変数名を正規表現として解釈]),
+        (`-s, --scope`, [変数のスコープを表示]),
+        (`-t, --no-recognized-args`, [recognized function argumentsを省略]),
+        (`-y, --summary <name>`, [変数の出力が使用すべきサマリーを指定]),
+        (`-z, --summary-string <name>`, [フォーマットに使用するサマリー文]),
+      ))
 // EOF
 // #outline(indent: 1em)
