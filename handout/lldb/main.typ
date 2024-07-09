@@ -623,12 +623,62 @@
         (`-s, --stop-info`, [JSON形式で停止情報を表示])
       ))
     === jump
+      プログラムカウンタを変更します。
+      #gram("thread jump <options>")
+      #ops((
+        (`-a, --address <expr>`, [ジャンプ先のアドレス]),
+        (`-b, --by <offset>`, [ジャンプ先のオフセット]),
+        (`-f, --file <filename>`, [ジャンプするファイル]),
+        (`-l, --line <linenum>`, [ジャンプするソース行番号]),
+        (`-r, --force`, [プログラムカウンタが関数の外に出ることを許可]),
+      ))
     === list
+      各スレッドについての概要を表示します。`setting set thread-format`で表示をカスタマイズできます。
+      #gram("thread list")
     === plan
+      スレッドの実行計画を管理するコマンドです。
+      #gram("thread plan <subcommand> [<options>]")
+      `subcommand`には`discard, list, prune`が指定できます。
+      ==== discard
+        スレッド計画を廃棄します。
+        #gram("thread plan discard <index>")
+      ==== list
+        スレッド計画を表示します。
+        #gram("thread plan list <options>")
+        #ops((
+          (`-i, --internal`, [内部スレッド計画も表示]),
+          (`-t, --thread-id`, [スレッドIDを指定]),
+          (`-u, --unreported`, [unreportedなスレッドを指定]),
+          (`-v, --verbose`, [より多くの情報を表示])
+        ))
+      ==== prune
+        現在のunreportedなスレッドのすべての計画を削除します。
+        #gram("thread plan prune <thread-id>...")
     === return
+      選択中のスタックフレームから返ります。
+      #gram("thread return <options>")
+      #todo("")
+      #ops((
+        (`-x, --from-expression`, [一番内側から式の値で返る]),
+      ))
     === select
+      選択中のスレッドを変更します。
+      #gram("thread select <index>")
     === siginfo
+      現在のsiginfoオブジェクトを表示します。
+      #gram("thread siginfo")
     === step-in
+      ソースコード上のステップを行います。関数呼び出しの場合には関数の中に入ります。スレッドを指定しない限り現在のスレッドにのみ適用されます。
+      #gram("thread step-in [<options>]")
+      #ops((
+        (`-A, --step-out-avoids-no-debug <bool>`, [ステップアウト時にデバッグ情報のある関数に当たるまでステップアウトを続ける]),
+        (`-a, --step-in-avoids-no-debug <bool>`, []),
+        (`-c, --`, []),
+        (`-e, --`, []),
+        (`-m, --`, []),
+        (`-r, --`, []),
+        (`-t, --`, []),
+      ))
     === step-inst
     === step-inst-over
     === step-out
@@ -638,3 +688,4 @@
     === until
 
 // EOF
+// #outline(indent: 1em)
