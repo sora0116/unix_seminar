@@ -84,9 +84,10 @@
     - LLVMのデバッガ
     - clangを使うならコレ
 ]
-== デバッガの起動、終了
+= GDB
+== GDBの起動、終了
 === 起動
-#slide(title: "デバッガの起動")[
+#slide(title: "GDBの起動")[
   ```shell
     $ gdb [options] [<program>]
   ```
@@ -98,7 +99,7 @@
   - `program` : デバッグ対象の実行可能ファイルを指定
 ]
 === 終了
-#slide(title: "デバッガの終了")[
+#slide(title: "GDBの終了")[
   - GDBが起動すると先頭に`(gdb)`と表示される
   ```shell
     (gdb) quit [<expr>]
@@ -110,7 +111,7 @@
   - `expr` : GDBの終了コードを指定
 ]
 === シェルコマンド
-#slide(title: "デバッガ起動中のシェルコマンド")[
+#slide(title: "GDB起動中のシェルコマンド")[
   ```shell
     (gdb) shell <command>
     (gdb) ! <command>
@@ -407,6 +408,211 @@
 
 == (トレースポイント)
 == (TUI)
+
+= LLDB
+== LLDBの起動、終了
+=== 起動
+#slide(title: "LLDBの起動")[
+  ```shell
+    $ lldb [<options>]
+  ```
+  でLLDBを起動
+]
+=== 終了
+#slide(title: "LLDBの終了")[
+  - GDBが起動すると先頭に`(lldb)`と表示される
+  ```shell
+    (lldb) quit [<expr>]
+    (lldb) exit [<expr>]
+  ```
+  でLLDBを終了(`ctrl-d`でも可)
+
+  引数:
+  - `expr` : LLDBの終了コードを指定
+]
+== コマンド
+=== コマンド概要
+#slide(title: "コマンド概要")[
+  - LLDBはコマンドで操作
+    - `quit`や`shell`もコマンド
+  ```shell
+    (lldb) <noun> <verb> [-<option> [<option-value>]] [<args>]
+  ```
+  の形で入力
+  - コマンドが区別できれば省略できる
+    - 例 : `quit` $arrow$ `q`
+  - `TAB`キーによる補完が可能
+    - 候補が唯一の場合自動入力
+    - 複数の場合2回押すと候補を表示
+]
+=== ヘルプ
+#slide(title: "コマンド補助")[
+  ```shell
+    (lldb) help <command>
+  ```
+  コマンドの一覧や使い方を表示
+
+  引数:
+  - `command` : ヘルプを見たいコマンドを指定
+
+  補足:
+  - 引数無しで`help`を実行すると`command`の一覧が表示される
+]
+== プログラムの開始
+=== スタート
+#slide(title: "プログラムの開始")[
+  ```shell
+    (gdb) process launch [<options>] [<args>]
+  ```
+  でプログラムをLLDBの下で実行
+  - `args` : プログラムのコマンドライン引数として渡される
+  `options`:
+  - `-s`: エントリポイントで停止
+]
+== プログラムの停止
+=== プログラム中断の概要
+#slide(title: "プログラムの停止")[
+  - LLDBを使うとプログラムを中断できる
+  - 停止する条件
+    - ブレークポイント
+    - ウォッチポイント
+  - 実行の再開
+    - 継続実行
+    - ステップ実行
+]
+=== ブレークポイント
+#slide(title: "ブレークポイント")[
+  - プログラム上の指定場所に到達したら中断
+  ```shell
+    (gdb) breakpoint set [<options>]
+  ```
+  でブレークポイントを設置
+
+  `options`:
+  - `-l <num>`: 行番号を指定
+  - `-n <name>`: 関数名を指定
+  - `-E <lang>`: 例外を指定
+]
+=== ウォッチポイント
+#slide(title: "ウォッチポイント")[
+  式の値が変更したら中断
+  ```shell
+    (gdb) watchpoint set expression [<options>] <expr>
+    (gdb) watchpoint set variable [<options>] <varname>
+  ```
+  でウォッチポイントを設置
+
+  `options`:
+  - `-w`: ウォッチタイプを指定
+    - `read`: 読まれたら停止
+    - `write`: 書かれたら停止
+    - `read_write`: 読み書きがあったら停止
+]
+=== ブレークポイントの削除
+#slide(title: "ブレークポイントの削除")[
+  ```shell
+    (gdb) breakpoint delete [<options>] [<breakpoint-id-list>]
+    (gdb) watchpoint delete [<options>] [<breakpoint-id-list>]
+  ```
+  で指定したブレークポイント、ウォッチポイントを削除
+
+  `options`:
+  - `-d`: 現在無効なリストで指定した以外の全てを削除
+  - `-f`: 警告なしで全て削除
+]
+== プログラムの再開
+=== 継続実行
+#slide(title: "継続実行")[
+  次の停止場所まで実行する
+  ```shell
+    (gdb) thread continue [<thread-index>]
+  ```
+  で継続実行
+]
+=== ステップ実行
+#slide(title: "ステップ実行")[
+  次の停止箇所を指定しつつ再開
+  ```shell
+    (gdb) thread step-in
+    (gdb) thread step-over
+  ```
+  で次の行まで実行。
+  
+  補足:
+  - `step-in`は関数呼び出しの場合中に入る
+  - `step-over`は関数呼び出しの場合中に入らない
+
+  `options`:
+  - `-c <count>`: ステップ回数
+]
+== スタックの調査
+=== バックトレース
+#slide(title: "バックトレース")[
+  関数呼び出しのトレース
+  ```shell
+    (gdb) thread backtrace <options>
+  ```
+  でバックトレースを表示
+
+  `options`:
+  - `-c <count>`: 表示するフレーム数
+  - `-s <index>`: 表示を開始するフレーム
+]
+=== フレームの選択
+#slide(title: "フレームの選択")[
+  ```shell
+    (gdb) frame select [<options>] [<frame-index>]
+  ```
+  でフレームを選択
+
+  `options`:
+  - `-r <offset>`: 現在のフレームからのオフセットで指定
+]
+=== フレーム関連のステップ実行
+#slide(title: "ステップ実行")[
+  ```shell
+    (gdb) thread step-out
+  ```
+  で選択中のフレームが返るまで実行
+]
+== ソースコードの調査
+=== リスト
+#slide(title: "ソースコード情報の表示")[
+  ```shell
+    (gdb) source list <options>
+  ```
+  でソースコードを表示
+  
+  `options`:
+  - `-l <linenum>`: 指定した行番号付近を表示
+  - `-f <filename>`: 指定したファイルを表示
+  - `-n <symbol>`: 指定した関数を表示
+
+]
+== データの調査
+=== プリント
+#slide(title: "プリント")[
+  ```shell
+    (gdb) frame variable [<options>] [<varname>...]
+  ```
+  で選択中のフレームの局所変数の値を表示
+
+  `options`:
+  - `-g`: グローバル変数も表示
+  - `-l`: 局所変数を非表示
+=== 人工配列
+  - `-Z <len>`: 配列として表示
+]
+=== レジスタ
+#slide(title: "レジスタ")[
+  ```shell
+    (gdb) register read [<options>] [<register-name>]
+  ```
+  でベクタ、フロート以外のレジスタを全て表示
+  
+  `options`:
+  - `-a`: ベクタ、フロート含む全てのレジスタを表示
+]
 
 = プロファイラ
 == プロファイラとは
