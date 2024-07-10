@@ -792,4 +792,4 @@
         (`-z, --summary-string <name>`, [フォーマットに使用するサマリー文]),
       ))
 // EOF
-// #outline(indent: 1em)
+#outline(indent: 1em)
