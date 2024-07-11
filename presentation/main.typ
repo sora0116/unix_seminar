@@ -35,6 +35,42 @@
 #title-slide(title: [第10回Unixゼミ\ Cプログラム(デバッグ編)], author: "川島研 B4 高木 空")[
 ]
 
+= はじめに
+#slide(title: "はじめに")[
+  - 演習でGCC、GDB、LLDB、Perfを使用します。
+  ```shell
+    $ gcc --version
+    $ gdb --version
+    $ lldb --version
+    $ perf --version
+  ```
+  を打って入っているか確認してください。
+]
+
+#slide(title: "入れ方")[
+  - GCC、GDB、LLDB
+  ```shell
+    $ sudo apt install gcc
+    $ sudo apt install gdb
+    $ sudo apt install lldb
+  ```
+  - perf (Ubuntu)
+  ```shell
+    $ sudo apt install linux-tools-$(uname -r) linux-tools-generic linux-tools-common
+  ```
+]
+
+#slide(title: "内容")[
+  - デバッガ
+    - GDB
+    - LLDB
+  - プロファイラ
+    - Perf
+  - 演習やスライド、資料等
+    - Github: https://github.com/sora0116/unix_seminar
+    - CloneでもDownload ZIPでも
+]
+
 = デバッガ
 == デバッガとは
 === 概要
