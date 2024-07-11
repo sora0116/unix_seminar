@@ -1,7 +1,8 @@
 #import "template.typ": *
 #show: my-theme.with(
   title: "第10回Unixゼミ",
-  author: "高木 空"
+  author: "高木 空",
+  date: datetime(year: 2024, month: 7, day: 13),
 )
 
 #show raw: it => {
@@ -408,6 +409,10 @@
 
 == (トレースポイント)
 == (TUI)
+== 演習1
+#slide(title: "演習1")[
+  #align(center+horizon)[演習1を解いてください。]
+]
 
 = LLDB
 == LLDBの起動、終了
@@ -613,6 +618,10 @@
   `options`:
   - `-a`: ベクタ、フロート含む全てのレジスタを表示
 ]
+== 演習2
+#slide(title: "演習2")[
+  #align(center+horizon)[演習2を解いてください。]
+]
 
 = プロファイラ
 == プロファイラとは
@@ -684,7 +693,11 @@
   - `--stdio` : TUIモードを使用しない
 ]
 == (top)
+== 演習3
+#slide(title: "演習3")[
+  #align(center+horizon)[演習3を解いてください。]
+]
 
-#set text(size: 12pt)
-#set page(paper: "a4")
-#block(inset: 30pt)[#outline(indent: 1em)]
+// #set text(size: 12pt)
+// #set page(paper: "a4")
+// #block(inset: 30pt)[#outline(indent: 1em)]
