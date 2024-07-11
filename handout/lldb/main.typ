@@ -55,9 +55,8 @@
 	== LLDBの起動
 		LLDBを起動するには以下のコマンドをシェルで叩きます。
 		```shell
-			$ lldb [<options>] 
+			$ lldb [<options>] [<program>]
 		```
-		#todo("補足")
 	== プログラムの読み込み
 		デバッグするプログラムをGDBに読み込むには起動時の引数で指定するか、コマンドで指定することができます。
 
@@ -221,7 +220,7 @@
 		`thread-index`を指定するとそのスレッドのみ継続実行できます。指定しない場合全てのスレッドが対象となります。`thread-index`の値は`thread list`コマンドで確認できます。
 	=== 関数から帰る
 		関数から帰るには`thread step-out`コマンドを使用します。
-		現在選択中のフレームが帰るまで実行します。フレームの選択方法は @frame を参照してください。
+		現在選択中のフレームが帰るまで実行します。フレームの選択方法は @frame_lldb を参照してください。
 		#syn("thread step-out [<thread-index>]")
 	=== ソース行単位ステップオーバー
 		ソース行単位ステップオーバーをするには`thread step-over`コマンドを使用します。
@@ -248,7 +247,7 @@
 	== バックトレース
 		コールスタックを表示するには`thread backtrace`コマンドを使用します。
 		#syn("thread backtrace")
-	== フレームの選択 <frame>
+	== フレームの選択 <frame_lldb>
 		フレームを選択するには`frame select`コマンドを使用します。
 		#syn("frame select [<options>] [<frame-index>]")
 		#options(`-r, --relative <offset>`, [選択中のフレームからのオフセットで選択])
